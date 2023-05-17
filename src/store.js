@@ -1,3 +1,5 @@
+import { generateCode } from "./utils";
+
 /**
  * Хранилище состояния приложения
  */
@@ -16,8 +18,8 @@ class Store {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
-      this.listeners = this.listeners.filter(item => item !== listener);
-    }
+      this.listeners = this.listeners.filter((item) => item !== listener);
+    };
   }
 
   /**
@@ -47,10 +49,12 @@ class Store {
     let lastId = this.getLastId() + 1;
     this.setState({
       ...this.state,
-      list: [...this.state.list, { code: lastId, title: "Новая запись" }],
-      lastId: lastId,
-    })
-  };
+      list: [
+        ...this.state.list,
+        { code: generateCode(), title: "Новая запись" },
+      ],
+    });
+  }
 
   /**
    * Удаление записи по коду
@@ -59,10 +63,10 @@ class Store {
   deleteItem(code) {
     this.setState({
       ...this.state,
+      // Новый список, в котором не будет удаляемой записи
       list: this.state.list.filter((item) => item.code !== code),
-      lastId: this.getLastId(),
-    })
-  };
+    });
+  }
 
   /**
    * Выделение записи по коду
@@ -71,16 +75,19 @@ class Store {
   selectItem(code) {
     this.setState({
       ...this.state,
-      list: this.state.list.map(item => {
+      list: this.state.list.map((item) => {
         if (item.code === code) {
-          item.selected = !item.selected;
-          if (item.selected) item.count = !item.count ? 1 : item.count + 1;
-        } else if (item.selected) {
-          item.selected = !item.selected;
+          // Смена выделения и подсчёт
+          return {
+            ...item,
+            selected: !item.selected,
+            count: item.selected ? item.count : item.count + 1 || 1,
+          };
         }
-        return item;
-      })
-    })
+        // Сброс выделения если выделена
+        return item.selected ? { ...item, selected: false } : item;
+      }),
+    });
   }
 }
 
