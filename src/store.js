@@ -7,6 +7,7 @@ class Store {
   constructor(initState = {}) {
     this.state = initState;
     this.listeners = []; // Слушатели изменений состояния
+    this.state.listCart = [];
   }
 
   /**
@@ -43,28 +44,30 @@ class Store {
     return this.state.lastId || this.state.list.length;
   }
   /**
-   * Добавление новой записи
+   * Добавление новой записи в корзину
    */
-  addItem() {
-    let lastId = this.getLastId() + 1;
+  addToCart(code) {
+    const itemInCart = this.state.listCart.find((item) => item.code === code);
     this.setState({
       ...this.state,
-      list: [
-        ...this.state.list,
-        { code: generateCode(), title: "Новая запись" },
+      listCart: [
+        ...this.state.listCart.filter((item) => item.code !== code),
+        itemInCart
+          ? { ...itemInCart, count: itemInCart.count + 1 }
+          : { ...this.state.list.find((item) => item.code === code), count: 1 },
       ],
     });
   }
 
   /**
-   * Удаление записи по коду
+   * Удаление записи из корзины по коду
    * @param code
    */
-  deleteItem(code) {
+  deleteFromCart(code) {
     this.setState({
       ...this.state,
       // Новый список, в котором не будет удаляемой записи
-      list: this.state.list.filter((item) => item.code !== code),
+      listCart: this.state.listCart.filter((item) => item.code !== code),
     });
   }
 
@@ -88,6 +91,18 @@ class Store {
         return item.selected ? { ...item, selected: false } : item;
       }),
     });
+  }
+
+  getTotalCount() {
+    return this.state.listCart.length;
+  }
+  getTotalPrice() {
+    return this.state.listCart.length
+      ? this.state.listCart.reduce(
+          (sum, item) => sum + item.count * item.price,
+          0
+        )
+      : 0;
   }
 }
 
