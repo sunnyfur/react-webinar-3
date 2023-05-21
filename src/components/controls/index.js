@@ -18,7 +18,7 @@ function Controls(props) {
                   few: "товара",
                   many: "товаров",
                 })
-              )}
+              )} / {formatText(props.totalPrice,"₽")}
             </>
           ) : (
             "пусто"

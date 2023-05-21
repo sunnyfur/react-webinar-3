@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { formatText, plural } from "../../utils";
 import "./style.css";
 import List from "../list";
+import itemStore from '../item-cart';
 
 function Cart(props) {
   return (
@@ -12,6 +13,7 @@ function Cart(props) {
           <List
             list={props.list}
             onActionItem={props.onAction}
+            listItem={itemStore}
             actionTitle={props.actionTitle}
           />
           <div className="Total">

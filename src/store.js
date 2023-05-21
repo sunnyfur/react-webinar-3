@@ -7,6 +7,8 @@ class Store {
   constructor(initState = {}) {
     this.state = initState;
     this.listeners = []; // Слушатели изменений состояния
+    this.state.totalCount=0;
+    this.state.totalPrice=0;
     this.state.listCart = [];
   }
 
@@ -57,6 +59,7 @@ class Store {
           : { ...this.state.list.find((item) => item.code === code), count: 1 },
       ],
     });
+    this.getTotal();
   }
 
   /**
@@ -69,6 +72,7 @@ class Store {
       // Новый список, в котором не будет удаляемой записи
       listCart: this.state.listCart.filter((item) => item.code !== code),
     });
+    this.getTotal();
   }
 
   /**
@@ -93,11 +97,9 @@ class Store {
     });
   }
 
-  getTotalCount() {
-    return this.state.listCart.length;
-  }
-  getTotalPrice() {
-    return this.state.listCart.length
+  getTotal() {
+    this.totalCount= this.state.listCart.length;
+    this.totalPrice= this.state.listCart.length
       ? this.state.listCart.reduce(
           (sum, item) => sum + item.count * item.price,
           0

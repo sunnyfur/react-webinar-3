@@ -5,6 +5,8 @@ import Head from "./components/head";
 import PageLayout from "./components/page-layout";
 import Modal from "./components/modal";
 import Cart from "./components/cart";
+import item from './components/item';
+import itemCart from './components/item-cart';
 
 /**
  * Приложение
@@ -14,8 +16,8 @@ import Cart from "./components/cart";
 function App({ store }) {
   const list = store.getState().list;
   const listCart = store.getState().listCart;
-  const totalCount = store.getTotalCount();
-  const totalPrice = store.getTotalPrice();
+  const totalCount = store.totalCount;
+  const totalPrice = store.totalPrice;
   const [isModalShow, setIsModalShow] = useState(false);
 
   const callbacks = {
@@ -36,6 +38,7 @@ function App({ store }) {
   };
 
   return (
+    <>    
     <PageLayout>
       <Head title="Магазин" />
       <Controls
@@ -46,9 +49,10 @@ function App({ store }) {
       <List
         list={list}
         onActionItem={callbacks.onAddToCart}
-        actionTitle="Добавить"
+        listItem={item}
       />
-      <Modal
+    </PageLayout>      
+    <Modal
         isShow={isModalShow}
         onClose={callbacks.onSwitchModal}
         title="Корзина"
@@ -56,11 +60,11 @@ function App({ store }) {
         <Cart
           list={listCart}
           onAction={callbacks.onDeleteFromCart}
-          actionTitle="Удалить"
           totalPrice={totalPrice}
         />
       </Modal>
-    </PageLayout>
+    </>
+
   );
 }
 
