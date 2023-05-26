@@ -1,47 +1,46 @@
 import {memo, useCallback, useEffect} from 'react';
 import Item from "../../components/item";
-import PageLayout from "../../components/page-layout";
-import Head from "../../components/head";
-import BasketTool from "../../components/basket-tool";
+
 import List from "../../components/list";
 import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
+import Pagination from "../../components/pagination";
+import {useNavigate} from "react-router-dom";
 
 function Main() {
-
   const store = useStore();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    store.actions.catalog.load();
-  }, []);
-
-  const select = useSelector(state => ({
+  const select = useSelector((state) => ({
     list: state.catalog.list,
-    amount: state.basket.amount,
-    sum: state.basket.sum
+    currPage: state.catalog.currPage,
+    totalPages: state.catalog.totalPages,
   }));
+  useEffect(() => store.actions.current.setTitle("Магазин"), []);
+
+  useEffect(() => {store.actions.catalog.loadArticles(select.currPage);}, [select.currPage]);
 
   const callbacks = {
-    // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
-    // Открытие модалки корзины
-    openModalBasket: useCallback(() => store.actions.modals.open('basket'), [store]),
-  }
+    // Установка текущей страницы
+    setCurrPage: useCallback(page => store.actions.catalog.setCurrPage(page), [store]),
+    onLink: useCallback(_id => navigate(`articles/${_id}`), [store]),
+  };
 
   const renders = {
     item: useCallback((item) => {
-      return <Item item={item} onAdd={callbacks.addToBasket}/>
-    }, [callbacks.addToBasket]),
+        return (<Item item={item} onAdd={callbacks.addToBasket} onLink={callbacks.onLink}/>);
+      }, [callbacks.addToBasket]),
   };
 
   return (
-    <PageLayout>
-      <Head title='Магазин'/>
-      <BasketTool onOpen={callbacks.openModalBasket} amount={select.amount}
-                  sum={select.sum}/>
-      <List list={select.list} renderItem={renders.item}/>
-    </PageLayout>
-
+    <>
+      <List list={select.list} renderItem={renders.item} />
+      <Pagination
+        onClick={callbacks.setCurrPage}
+        currPage={select.currPage}
+        totalPages={select.totalPages}
+      />
+    </>
   );
 }
 

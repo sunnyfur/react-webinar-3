@@ -1,4 +1,4 @@
-import {memo, useState} from "react";
+import {memo} from "react";
 import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
 import {numberFormat} from "../../utils";
@@ -9,17 +9,18 @@ function Item(props){
   const cn = bem('Item');
 
   const callbacks = {
-    onAdd: (e) => props.onAdd(props.item._id)
-  }
+    onAdd: (e) => props.onAdd(props.item._id),
+    onLink: (e) => props.onLink(props.item._id),
+  };
 
   return (
     <div className={cn()}>
       {/*<div className={cn('code')}>{props.item._id}</div>*/}
-      <div className={cn('title')}>
+      <div onClick={callbacks.onLink} className={cn("title")}>
         {props.item.title}
       </div>
-      <div className={cn('actions')}>
-        <div className={cn('price')}>{numberFormat(props.item.price)} ₽</div>
+      <div className={cn("actions")}>
+        <div className={cn("price")}>{numberFormat(props.item.price)} ₽</div>
         <button onClick={callbacks.onAdd}>Добавить</button>
       </div>
     </div>
@@ -33,10 +34,12 @@ Item.propTypes = {
     price: PropTypes.number
   }).isRequired,
   onAdd: PropTypes.func,
+  onLink: PropTypes.func
 };
 
 Item.defaultProps = {
   onAdd: () => {},
+  onLink: () => {},
 }
 
 export default memo(Item);
