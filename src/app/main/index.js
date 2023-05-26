@@ -21,6 +21,8 @@ function Main() {
   useEffect(() => {store.actions.catalog.loadArticles(select.currPage);}, [select.currPage]);
 
   const callbacks = {
+    // Добавление в корзину
+    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store] ),
     // Установка текущей страницы
     setCurrPage: useCallback(page => store.actions.catalog.setCurrPage(page), [store]),
     onLink: useCallback(_id => navigate(`articles/${_id}`), [store]),

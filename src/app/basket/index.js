@@ -25,13 +25,12 @@ function Basket() {
     onLink: useCallback(_id => { 
       navigate(`articles/${_id}`);
       callbacks.closeModal();
-      }, [store]
-    ),
+      }, [store]),
   };
 
   const renders = {
     itemBasket: useCallback((item) => {
-      return <ItemBasket item={item} onRemove={callbacks.removeFromBasket}/>
+      return <ItemBasket item={item} onRemove={callbacks.removeFromBasket} onLink={callbacks.onLink}/>
     }, [callbacks.removeFromBasket]),
   };
 
