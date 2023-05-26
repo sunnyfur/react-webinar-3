@@ -1,27 +1,27 @@
-import React from "react";
-import PropTypes from "prop-types";
-import "./style.css";
-import { formatText, plural } from "../../utils";
+import { memo } from 'react';
+import PropTypes from 'prop-types';
+import './style.css';
 
 function Controls(props) {
   return (
-    <div className="Controls">
+    <div className='Controls'>
       <div>
-        В корзине:{" "}
+        В корзине:{' '}
         <strong>
           {props.totalCount ? (
             <>
               {formatText(
                 props.totalCount,
                 plural(props.totalCount, {
-                  one: "товар",
-                  few: "товара",
-                  many: "товаров",
+                  one: 'товар',
+                  few: 'товара',
+                  many: 'товаров',
                 })
-              )} / {formatText(props.totalPrice,"₽")}
+              )}{' '}
+              / {formatText(props.totalPrice, '₽')}
             </>
           ) : (
-            "пусто"
+            'пусто'
           )}
         </strong>
       </div>
@@ -40,4 +40,4 @@ Controls.defaultProps = {
   onCartOpen: () => {},
 };
 
-export default React.memo(Controls);
+export default memo(Controls);
