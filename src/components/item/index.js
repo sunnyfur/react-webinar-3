@@ -8,7 +8,6 @@ function Item(props){
 
   const cn = bem('Item');
 
-export default function Item(item,onAction) {
   const callbacks = {
     onAdd: (e) => props.onAdd(props.item._id)
   }
