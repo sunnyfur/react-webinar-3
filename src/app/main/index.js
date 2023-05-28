@@ -6,17 +6,20 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from "../../components/pagination";
 import {useNavigate} from "react-router-dom";
+import { translate } from '../../utils';
+import useLang from '../../store/use-lang';
 
 function Main() {
   const store = useStore();
   const navigate = useNavigate();
+  const {lang}= useLang();
 
   const select = useSelector((state) => ({
     list: state.catalog.list,
     currPage: state.catalog.currPage,
     totalPages: state.catalog.totalPages,
   }));
-  useEffect(() => store.actions.current.setTitle("Магазин"), []);
+  useEffect(() => store.actions.current.setTitle(translate("main.title",lang)), []);
 
   useEffect(() => {store.actions.catalog.loadArticles(select.currPage);}, [select.currPage]);
 

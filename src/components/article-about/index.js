@@ -1,8 +1,10 @@
 import { memo } from "react";
 import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
-import { numberFormat } from "../../utils";
+import { numberFormat, translate } from "../../utils";
 import "./style.css";
+import useLang from '../../store/use-lang';
+
 
 function ArticleAbout(props) {
   const callbacks = {
@@ -11,22 +13,24 @@ function ArticleAbout(props) {
       props.onAdd(props.article._id);
     },
   };
+  const {lang}= useLang();
   const cn = bem("Article");
 
   return (
     <div className={cn()}>
       <p>{props.article.description}</p>
       <p>
-        Страна производитель:{" "}
+        {translate("article.country",lang)}:{" "}
         <strong>
           {props.article.madeIn?.title} ({props.article.madeIn?.code})
         </strong>
       </p>
       <p>
-        Год выпуска: <strong>{props.article.edition}</strong>
+        {translate("article.year",lang)}
+      : <strong>{props.article.edition}</strong>
       </p>
-      <p className={cn("price")}>Цена: {numberFormat(props.article.price)} ₽</p>
-      <button onClick={callbacks.onClick}>Добавить</button>
+      <p className={cn("price")}>{translate("article.price",lang)}: {numberFormat(props.article.price)} ₽</p>
+      <button onClick={callbacks.onClick}>{translate("links.add",lang)}</button>
     </div>
   );
 }

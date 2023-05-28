@@ -1,3 +1,4 @@
+import lang from 'lang.json';
 /**
  * Плюрализация
  * Возвращает вариант с учётом правил множественного числа под указанную локаль
@@ -67,4 +68,15 @@ export function paginationList(currPage, totalPages, step=1,space="..."){
     if (!pagination.includes(totalPages)) pagination.push(totalPages);
   }
   return pagination;
+}
+
+export function translate(path, curr="en"){
+  const paths=path.split(".");
+  let obj=lang[curr];
+  
+  for (let i=0 ; i<paths.length;i++){
+    if (obj[paths[i]]) obj=obj[paths[i]]
+  }
+
+  return obj
 }

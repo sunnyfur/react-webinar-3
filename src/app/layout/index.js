@@ -4,7 +4,7 @@ import useSelector from "../../store/use-selector";
 import PageLayout from "../../components/page-layout";
 import Head from "../../components/head";
 import BasketTool from "../../components/basket-tool";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 function Layout() {
   const store = useStore();
@@ -13,6 +13,7 @@ function Layout() {
     amount: state.basket.amount,
     sum: state.basket.sum,
     title: state.current.title,
+    lang: state.lang.lang,
   }));
   const callbacks = {
     // Открытие модалки корзины
@@ -20,11 +21,12 @@ function Layout() {
       () => store.actions.modals.open("basket"),
       [store]
     ),
+    selectLang: useCallback((lang)=>store.actions.lang.setLang(lang),[store])
   };
 
   return (
     <PageLayout>
-      <Head title={select.title} />
+      <Head title={select.title} selectLang={callbacks.selectLang} lang={select.lang}/>
       <BasketTool
         onOpen={callbacks.openModalBasket}
         amount={select.amount}
