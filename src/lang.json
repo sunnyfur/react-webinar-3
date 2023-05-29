@@ -5,7 +5,8 @@
       "add": "Добавить",
       "delete": "Удалить",
       "open": "Перейти",
-      "close": "Закрыть"
+      "close": "Закрыть",
+      "pcs": "шт"
     },
     "main": {
       "title": "Магазин",
@@ -35,7 +36,8 @@
       "add": "Add",
       "delete": "Delete",
       "open": "Open",
-      "close": "Close"
+      "close": "Close",
+      "pcs": "pcs"
     },
     "main": {
       "title": "Store",

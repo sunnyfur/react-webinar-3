@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
@@ -7,36 +7,39 @@ import Head from "../../components/head";
 import BasketTool from "../../components/basket-tool";
 import WrapperBetween from '../../components/wrapper-between';
 import Menu from '../../components/menu/menu';
-import { translate } from '../../utils';
+import { LangContext,  useTranslate } from '../../language/lang-conext';
 
 function Layout(props) {
   const store = useStore();
-  const [links, setLinks]=useState([]) 
+
+  const {lang, changeLang} = useContext(LangContext);
+  const t= useTranslate();
  
   const select = useSelector((state) => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
-    lang: state.lang.lang,
+   
   }));
-  useEffect(()=>setLinks([{link:'/', title: translate("links.main",select.lang)}]),[select.lang])
+
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(
       () => store.actions.modals.open("basket"),
       [store]
     ),
-    selectLang: useCallback((lang)=>store.actions.lang.setLang(lang),[store])
+    selectLang: useCallback((lang)=>changeLang(lang),[])
   };
 
   return (
     <PageLayout>
-      <Head title={props.title} selectLang={callbacks.selectLang} lang={select.lang}/>
+      <Head title={props.title} selectLang={callbacks.selectLang} lang={lang}/>
       <WrapperBetween>
-        <Menu links={links}/>
+        <Menu links={[{link:'/', title: t("links.main")}]}/>
         <BasketTool
           onOpen={callbacks.openModalBasket}
           amount={select.amount}
           sum={select.sum}
+          texts={{inBasket:t("main.inBasket"), empty:t("main.empty"), productPlural:t("productPlural"), open:t("links.open")}}
         />
       </WrapperBetween>
       {props.children}

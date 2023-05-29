@@ -6,18 +6,20 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from "../../components/pagination";
 import {useNavigate} from "react-router-dom";
-import { translate } from '../../utils';
-import useLang from '../../store/use-lang';
 import Layout from '../layout';
+import { useTranslate } from '../../language/lang-conext';
+
 
 function Main() {
   const store = useStore();
   const navigate = useNavigate();
-  const {lang}= useLang();
+  const t= useTranslate();
+
   const select = useSelector((state) => ({
     list: state.catalog.list,
     currPage: state.catalog.currPage,
     totalPages: state.catalog.totalPages,
+
   }));
 
 
@@ -33,12 +35,12 @@ function Main() {
 
   const renders = {
     item: useCallback((item) => {
-        return (<Item item={item} onAdd={callbacks.addToBasket} onLink={callbacks.onLink}/>);
-      }, [callbacks.addToBasket]),
+        return (<Item item={item} onAdd={callbacks.addToBasket} onLink={callbacks.onLink} addText={t("links.add")}/>);
+      }, [callbacks.addToBasket, t]),
   };
 
   return (
-    <Layout title={translate("main.title",lang)||""}>
+    <Layout title={t("main.title")}>
       <List list={select.list} renderItem={renders.item} />
       <Pagination
         onClick={callbacks.setCurrPage}

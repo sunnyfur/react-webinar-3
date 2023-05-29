@@ -4,28 +4,34 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import ArticleAbout from "../../components/article-about";
 import Layout from '../layout';
+import {  useTranslate } from '../../language/lang-conext';
 
 
 function Article() {
   const params = useParams();
   const store = useStore();
+  const t= useTranslate();
   const select = useSelector((state) => ({
     article: state.catalog.article,
-    lang: state.lang.lang,
+  
   }));
- 
+
 
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store] ),
-    selectLang: useCallback((lang)=>store.actions.lang.setLang(lang),[store])
   };
 
   useEffect(() => {store.actions.catalog.loadArticle(params.id);}, [params.id]);
 
   return (
     <Layout title={select.article.title||""}>
-       <ArticleAbout article={select.article} onAdd={callbacks.addToBasket} />
+       <ArticleAbout article={select.article} onAdd={callbacks.addToBasket} 
+       texts={{
+        country: t("article.country"),
+        year: t("article.year"), 
+        price: t("article.price"), 
+        add: t("links.add")}}/>
     </Layout>
     
   );

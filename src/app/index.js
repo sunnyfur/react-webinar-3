@@ -4,6 +4,7 @@ import useSelector from "../store/use-selector";
 import { Route, Routes } from "react-router";
 import { BrowserRouter } from "react-router-dom";
 import Article from "./article";
+import { LangProvider } from '../language/lang-conext';
 
 /**
  * Приложение
@@ -14,13 +15,16 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+    <LangProvider>
+            <BrowserRouter>
         <Routes>
             <Route index element={<Main />} />
             <Route path="articles/:id" element={<Article />} />
         </Routes>
         {activeModal === "basket" && <Basket />}
       </BrowserRouter>
+    </LangProvider>
+
     </>
   );
 }
