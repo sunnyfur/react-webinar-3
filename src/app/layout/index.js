@@ -18,7 +18,7 @@ function Layout(props) {
     sum: state.basket.sum,
     lang: state.lang.lang,
   }));
-  useEffect(()=>setLinks([{link:'/', title: translate("links.main")}]),[select.lang])
+  useEffect(()=>setLinks([{link:'/', title: translate("links.main",select.lang)}]),[select.lang])
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(
