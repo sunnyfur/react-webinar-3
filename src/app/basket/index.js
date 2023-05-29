@@ -6,8 +6,9 @@ import BasketTotal from "../../components/basket-total";
 import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import { useNavigate } from "react-router-dom";
-import useLang from '../../store/use-lang';
 import { translate } from '../../utils';
+
+
 
 function Basket() {
   const store = useStore();
@@ -18,7 +19,6 @@ function Basket() {
     amount: state.basket.amount,
     sum: state.basket.sum,
   }));
-  const {lang}= useLang();
 
   const callbacks = {
     // Удаление из корзины
@@ -38,7 +38,7 @@ function Basket() {
   };
 
   return (
-    <ModalLayout title={translate("basket.title",lang)} onClose={callbacks.closeModal}>
+    <ModalLayout title={translate("basket.title")} onClose={callbacks.closeModal}>
       <List list={select.list} renderItem={renders.itemBasket}/>
       <BasketTotal sum={select.sum}/>
     </ModalLayout>

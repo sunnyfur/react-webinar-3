@@ -8,18 +8,18 @@ import Pagination from "../../components/pagination";
 import {useNavigate} from "react-router-dom";
 import { translate } from '../../utils';
 import useLang from '../../store/use-lang';
+import Layout from '../layout';
 
 function Main() {
   const store = useStore();
   const navigate = useNavigate();
   const {lang}= useLang();
-
   const select = useSelector((state) => ({
     list: state.catalog.list,
     currPage: state.catalog.currPage,
     totalPages: state.catalog.totalPages,
   }));
-  useEffect(() => store.actions.current.setTitle(translate("main.title",lang)), []);
+
 
   useEffect(() => {store.actions.catalog.loadArticles(select.currPage);}, [select.currPage]);
 
@@ -38,14 +38,14 @@ function Main() {
   };
 
   return (
-    <>
+    <Layout title={translate("main.title",lang)||""}>
       <List list={select.list} renderItem={renders.item} />
       <Pagination
         onClick={callbacks.setCurrPage}
         currPage={select.currPage}
         totalPages={select.totalPages}
       />
-    </>
+    </Layout>
   );
 }
 
