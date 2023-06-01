@@ -1,10 +1,9 @@
+import {useCallback, useContext, useEffect, useState} from 'react';
+import {Routes, Route} from 'react-router-dom';
+import useSelector from "../hooks/use-selector";
 import Main from "./main";
 import Basket from "./basket";
-import useSelector from "../store/use-selector";
-import { Route, Routes } from "react-router";
-import { BrowserRouter } from "react-router-dom";
 import Article from "./article";
-import { LangProvider } from '../language/lang-conext';
 
 /**
  * Приложение
@@ -15,16 +14,12 @@ function App() {
 
   return (
     <>
-    <LangProvider>
-            <BrowserRouter>
-        <Routes>
-            <Route index element={<Main />} />
-            <Route path="articles/:id" element={<Article />} />
-        </Routes>
-        {activeModal === "basket" && <Basket />}
-      </BrowserRouter>
-    </LangProvider>
+      <Routes>
+        <Route path={''} element={<Main/>}/>
+        <Route path={'/articles/:id'} element={<Article/>}/>
+      </Routes>
 
+      {activeModal === 'basket' && <Basket/>}
     </>
   );
 }

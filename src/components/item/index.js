@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
 import {numberFormat, translate} from "../../utils";
 import './style.css';
+import {Link} from "react-router-dom";
 
 
 function Item(props){
@@ -11,18 +12,17 @@ function Item(props){
 
   const callbacks = {
     onAdd: (e) => props.onAdd(props.item._id),
-    onLink: (e) => props.onLink(props.item._id),
-  };
+  }
 
   return (
     <div className={cn()}>
       {/*<div className={cn('code')}>{props.item._id}</div>*/}
-      <div onClick={callbacks.onLink} className={cn("title")}>
-        {props.item.title}
+      <div className={cn('title')}>
+        <Link to={props.link}>{props.item.title}</Link>
       </div>
-      <div className={cn("actions")}>
-        <div className={cn("price")}>{numberFormat(props.item.price)} ₽</div>
-        <button onClick={callbacks.onAdd}>{props.addText}</button>
+      <div className={cn('actions')}>
+        <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
+        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
       </div>
     </div>
   );
@@ -34,14 +34,16 @@ Item.propTypes = {
     title: PropTypes.string,
     price: PropTypes.number
   }).isRequired,
-  addText: PropTypes.string,
+  link: PropTypes.string,
   onAdd: PropTypes.func,
-  onLink: PropTypes.func
+  labelCurr: PropTypes.string,
+  labelAdd: PropTypes.string
 };
 
 Item.defaultProps = {
   onAdd: () => {},
-  onLink: () => {},
+  labelCurr: '₽',
+  labelAdd: 'Добавить'
 }
 
 export default memo(Item);

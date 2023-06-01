@@ -1,39 +1,48 @@
-import { memo, useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
-import useStore from "../../store/use-store";
-import useSelector from "../../store/use-selector";
-import ArticleAbout from "../../components/article-about";
-import Layout from '../layout';
-import {  useTranslate } from '../../language/lang-conext';
-
+import {memo, useCallback, useMemo} from 'react';
+import {useParams} from "react-router-dom";
+import useStore from "../../hooks/use-store";
+import useSelector from "../../hooks/use-selector";
+import useTranslate from "../../hooks/use-translate";
+import useInit from "../../hooks/use-init";
+import PageLayout from "../../components/page-layout";
+import Head from "../../components/head";
+import Navigation from "../../containers/navigation";
+import Spinner from "../../components/spinner";
+import ArticleCard from "../../components/article-card";
+import LocaleSelect from "../../containers/locale-select";
 
 function Article() {
-  const params = useParams();
   const store = useStore();
-  const t= useTranslate();
-  const select = useSelector((state) => ({
-    article: state.catalog.article,
-  
+
+  // Параметры из пути /articles/:id
+  const params = useParams();
+
+  useInit(() => {
+    store.actions.article.load(params.id);
+  }, [params.id]);
+
+  const select = useSelector(state => ({
+    article: state.article.data,
+    waiting: state.article.waiting,
   }));
 
+  const {t} = useTranslate();
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store] ),
-  };
-
-  useEffect(() => {store.actions.catalog.loadArticle(params.id);}, [params.id]);
+    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+  }
 
   return (
-    <Layout title={select.article.title||""}>
-       <ArticleAbout article={select.article} onAdd={callbacks.addToBasket} 
-       texts={{
-        country: t("article.country"),
-        year: t("article.year"), 
-        price: t("article.price"), 
-        add: t("links.add")}}/>
-    </Layout>
-    
+    <PageLayout>
+      <Head title={select.article.title}>
+        <LocaleSelect/>
+      </Head>
+      <Navigation/>
+      <Spinner active={select.waiting}>
+        <ArticleCard article={select.article} onAdd={callbacks.addToBasket} t={t}/>
+      </Spinner>
+    </PageLayout>
   );
 }
 

@@ -1,20 +1,20 @@
-import { memo, useCallback, useEffect } from "react";
+import {memo, useCallback} from 'react';
+import useStore from "../../hooks/use-store";
+import useSelector from "../../hooks/use-selector";
+import useInit from "../../hooks/use-init";
+import useTranslate from "../../hooks/use-translate";
 import ItemBasket from "../../components/item-basket";
 import List from "../../components/list";
 import ModalLayout from "../../components/modal-layout";
 import BasketTotal from "../../components/basket-total";
-import useStore from "../../store/use-store";
-import useSelector from "../../store/use-selector";
-import { useNavigate } from "react-router-dom";
-import { useTranslate } from '../../language/lang-conext';
-
+import { useNavigate } from 'react-router-dom';
 
 
 function Basket() {
   const store = useStore();
   const navigate = useNavigate();
 
-  const t= useTranslate();
+
   const select = useSelector((state) => ({
     list: state.basket.list,
     amount: state.basket.amount,
@@ -32,16 +32,25 @@ function Basket() {
       }, [store]),
   };
 
+  const {t} = useTranslate();
+
   const renders = {
-    itemBasket: useCallback((item) => {
-      return <ItemBasket item={item} onRemove={callbacks.removeFromBasket} onLink={callbacks.onLink} texts={{delete:t("links.delete"), pcs:t("links.pcs") }}/>
-    }, [callbacks.removeFromBasket]),
+    itemBasket: useCallback((item) => (
+      <ItemBasket item={item}
+                  link={`/articles/${item._id}`}
+                  onRemove={callbacks.removeFromBasket}
+                  onLink={callbacks.closeModal}
+                  labelUnit={t('basket.unit')}
+                  labelDelete={t('basket.delete')}
+      />
+    ), [callbacks.removeFromBasket, t]),
   };
 
   return (
-    <ModalLayout title={t("basket.title")} onClose={callbacks.closeModal}>
+    <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
+                 onClose={callbacks.closeModal}>
       <List list={select.list} renderItem={renders.itemBasket}/>
-      <BasketTotal sum={select.sum} totalTitle={t("links.open")}/>
+      <BasketTotal sum={select.sum} t={t}/>
     </ModalLayout>
   );
 }
